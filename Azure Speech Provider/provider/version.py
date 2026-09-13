@@ -13,6 +13,6 @@ DESCRIPTION = "Azure Speech STT/TTS provider for Hermes"
 AUTHOR = "Ralf Rottmann"
 LICENSE = "MIT"
 
-VERSION = (1, 0, 0)
+VERSION = (0, 1, 0)
 
 __version__ = ".".join(map(str, VERSION))

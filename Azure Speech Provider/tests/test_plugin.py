@@ -61,7 +61,7 @@ def test_repo_plugin_manifest_exists_with_required_metadata():
     content = plugin_path.read_text(encoding="utf-8")
 
     assert "name: azure-speech" in content
-    assert "version: 1.0.0" in content
+    assert "version: 0.1.0" in content
     assert "description: Microsoft Azure Speech STT/TTS provider for Hermes Agent" in content
     assert "requires_env:" in content
     assert "AZURE_SPEECH_KEY" in content
