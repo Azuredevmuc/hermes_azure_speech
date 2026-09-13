@@ -1,6 +1,0 @@
-[console_scripts]
-hermes-azure-speech-stt = provider.cli:stt_main
-hermes-azure-speech-tts = provider.cli:tts_main
-
-[hermes_agent.plugins]
-azure-speech = provider:register
