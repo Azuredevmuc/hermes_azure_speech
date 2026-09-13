@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-provider-azure-speech"
+dynamic = ["version"]
+description = "Azure Speech STT/TTS provider for Hermes"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Ralf Rottmann" },
+]
+keywords = ["hermes", "azure", "speech", "tts", "stt"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "azure-cognitiveservices-speech>=1.40",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+hermes-azure-speech-tts = "provider.cli:tts_main"
+hermes-azure-speech-stt = "provider.cli:stt_main"
+
+[project.entry-points."hermes_agent.plugins"]
+azure-speech = "provider:register"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "pip-audit>=2.7",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["provider*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "provider.version.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

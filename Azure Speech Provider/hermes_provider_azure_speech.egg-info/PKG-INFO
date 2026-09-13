@@ -1,0 +1,294 @@
+Metadata-Version: 2.4
+Name: hermes-provider-azure-speech
+Version: 0.1.0
+Summary: Azure Speech STT/TTS provider for Hermes
+Author: Ralf Rottmann
+License: MIT License
+        
+        Copyright (c) 2026 Ralf Rottmann
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Keywords: hermes,azure,speech,tts,stt
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Libraries
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: azure-cognitiveservices-speech>=1.40
+Requires-Dist: python-dotenv>=1.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"
+Requires-Dist: pip-audit>=2.7; extra == "dev"
+Dynamic: license-file
+
+# Hermes Azure Speech Provider
+
+Reusable Azure Speech STT/TTS provider components for Hermes-based integrations.
+
+## Overview
+
+This package provides a small, clean SDK-style surface for Azure Speech operations in Hermes environments:
+
+- `AzureSpeechConfig` for environment-based configuration
+- `AzureSpeechTTS` and `AzureSpeechTTSOptions` for text-to-speech synthesis
+- `AzureSpeechSTT` and `AzureSpeechSTTOptions` for speech-to-text transcription
+- `AzureSSMLBuilder`, `SSMLSettings`, and `build_ssml()` for SSML generation
+
+This project is intended to be used as a Hermes speech provider backend or extension layer rather than as a generic agent skill. It exposes reusable speech capabilities that can be integrated into a Hermes deployment without tying the logic to a specific runtime or user interface.
+
+## How it fits into Hermes
+
+This project is not a “skill” in the sense used by some other agent ecosystems. In Hermes, this package is designed to be used as a provider or extension layer for Azure Speech functionality.
+
+For compliance and clarity, this project follows the “same runtime” integration model: install it into the same Python environment that runs Hermes and configure Azure credentials within that runtime context.
+
+It exposes reusable Python components for:
+
+- speech-to-text
+- text-to-speech
+- SSML-based voice output
+- Azure configuration and validation
+- clean provider-side error handling
+
+These components can be plugged into a Hermes environment as a speech backend or provider module, enabling Azure-based voice features in a clean and maintainable way.
+
+For the current Hermes plugin surface, this package can expose:
+
+- a Python `TTSProvider` plugin with `get_setup_schema()` metadata for `hermes tools` / `hermes setup`
+- a Python `TranscriptionProvider` plugin for STT routing
+- installed CLI commands as a compatibility path for command-based configs
+
+## What this project provides
+
+This package provides:
+
+- reusable Azure Speech client logic
+- clean configuration via environment variables
+- optional `.env` support
+- STT/TTS backends with timeout handling
+- SSML generation for Azure voice output
+- structured exceptions for Azure-related runtime failures
+- a lightweight, provider-oriented API for Hermes integrations
+- Hermes wrapper bootstrap via `HermesTTSProvider.from_env()` and `HermesSTTProvider.from_env()`
+- provider metadata via `describe()` for bridge-side capability routing
+- importable provider loading via `HermesAzureSpeechAdapter.load_from_env()`
+- a Hermes plugin entrypoint via `provider.plugin:register`
+
+It is designed to be easy to integrate into Hermes-based deployments and reusable in other Python runtimes as well.
+
+## Features
+
+- Environment-driven configuration with optional `.env` loading
+- SSML-aware TTS synthesis
+- File-based transcription flow
+- Clean exception hierarchy for Azure Speech failures
+- Lightweight helper utilities for text and file handling
+
+## Installation
+
+Install the package into the same Python environment that runs Hermes. This is the recommended setup for a production or local Hermes deployment because the provider must resolve in the same runtime context as the agent.
+
+```bash
+uv pip install -e .
+```
+
+If Hermes is running in a dedicated virtual environment, install the package there instead of in a different global Python installation.
+
+If you want to install the runtime dependencies explicitly:
+
+```bash
+uv pip install azure-cognitiveservices-speech python-dotenv
+```
+
+> Recommended pattern: install this package into the Hermes environment itself, not into a separate global interpreter that Hermes does not use.
+
+## Configuration
+
+Set the following environment variables:
+
+```bash
+export AZURE_SPEECH_KEY="<your-key>"
+export AZURE_SPEECH_REGION="<your-region>"
+export AZURE_SPEECH_VOICE="de-DE-KatjaNeural"
+export AZURE_SPEECH_LANGUAGE="de-DE"
+```
+
+You can also optionally load values from a `.env` file using `AzureSpeechConfig.from_env()`.
+
+> The configuration object redacts the speech key in serialized output (`as_dict()`) to avoid accidental exposure in logs, debug output, or UI traces.
+
+For Hermes deployments, the recommended non-secret bootstrap path is to create or extend the local Hermes `.env` file with placeholders and safe defaults:
+
+```powershell
+pwsh -File .\scripts\bootstrap_hermes_azure_env.ps1 -HermesHome "C:\AI\Hermes\home"
+```
+
+The script does not write real credentials. It only ensures these keys exist in the target `.env` file:
+
+- `AZURE_SPEECH_KEY=`
+- `AZURE_SPEECH_REGION=`
+- `AZURE_SPEECH_VOICE=de-DE-KatjaNeural`
+- `AZURE_SPEECH_LANGUAGE=de-DE`
+
+After running it, fill in the blank Azure values locally.
+
+## Example
+
+```python
+from provider import AzureSpeechConfig, AzureSpeechTTS, synthesize_text_to_file
+
+config = AzureSpeechConfig.from_env()
+
+synthesize_text_to_file(
+    "Hallo, ich bin der Azure Speech Provider.",
+    "output.mp3",
+    config=config,
+)
+```
+
+## Hermes Wrapper Contract
+
+For Hermes bridge integrations, prefer the wrapper layer over direct Azure classes when you want a stable provider contract:
+
+```python
+from provider import HermesSTTProvider, HermesTTSProvider
+
+tts = HermesTTSProvider.from_env()
+stt = HermesSTTProvider.from_env()
+
+assert tts.describe() == {
+    "provider_name": "azure_speech",
+    "capability": "tts",
+    "runtime": "python",
+}
+```
+
+This keeps bootstrap, capability identification, and Azure-specific configuration handling inside the provider layer.
+
+For Hermes-facing integrations that should avoid shell command bridges, prefer the package adapter:
+
+```python
+from provider import HermesAzureSpeechAdapter
+
+providers = HermesAzureSpeechAdapter.load_from_env()
+tts = providers["tts"]
+stt = providers["stt"]
+```
+
+This is the preferred Hermes integration boundary in this repository. The legacy CLI scripts remain only for backward compatibility with older command-based setups.
+
+## Hermes Plugin Path
+
+This package now exposes a Hermes plugin entrypoint named `azure-speech`. In a Hermes runtime that loads pip-distributed plugins, enabling that plugin allows Hermes to register:
+
+- `AzureTTSProvider` through `ctx.register_tts_provider(...)`
+- `AzureTranscriptionProvider` through `ctx.register_transcription_provider(...)`
+
+The TTS plugin implements `get_setup_schema()` so Hermes can render a richer picker row in `hermes tools` / `hermes setup` for Azure Speech.
+
+The repository also now includes a native Hermes plugin manifest at `plugin.yaml` plus a root-level `__init__.py` entrypoint. That allows Hermes to install or inspect the repository directly as a standalone plugin source in addition to the `uv` package path.
+
+## Hermes Config Changes
+
+For the plugin-based path, use the plugin provider id directly and enable the plugin in Hermes config.
+
+Recommended `config.yaml` shape:
+
+```yaml
+plugins:
+    enabled:
+        - azure-speech
+
+tts:
+    provider: azure-speech
+    use_gateway: false
+
+stt:
+    enabled: true
+    provider: azure-speech
+    use_gateway: false
+    azure-speech:
+        language: de-DE
+```
+
+Important details:
+
+- `plugins.enabled` must include `azure-speech` so Hermes imports the plugin entrypoint
+- `tts.provider: azure-speech` routes through the Python TTS plugin
+- `stt.provider: azure-speech` routes through the Python transcription plugin
+- the package install still makes `hermes-azure-speech-tts` and `hermes-azure-speech-stt` available for legacy command-based configs
+- STT setup metadata is exposed for forward compatibility, but Hermes' STT picker path is more limited than TTS today
+- the bootstrap script creates `.env` placeholders but does not write secrets for the user
+
+## Package API
+
+The package exposes the following public symbols:
+
+- `AzureSpeechConfig`
+- `AzureSpeechTTS`
+- `AzureSpeechTTSOptions`
+- `synthesize_text_to_file`
+- `AzureSpeechSTT`
+- `AzureSpeechSTTOptions`
+- `transcribe_file_to_text`
+- `AzureSSMLBuilder`
+- `SSMLSettings`
+- `build_ssml`
+- `VERSION`
+- `__version__`
+
+## Testing
+
+The project includes a small pytest suite under the `tests/` directory.
+
+Run:
+
+```bash
+python -m pytest tests/test_tts.py tests/test_stt.py tests/test_ssml.py
+```
+
+## Roadmap
+
+A phased implementation and release plan for making this project publicly usable, secure, and Hermes-ready is documented here:
+
+- [Hermes Azure Speech Provider Roadmap](docs/hermes_provider_roadmap.md)
+- [Release Readiness and Maintenance Plan](docs/release_readiness.md)
+
+## Hermes Integration Guide
+
+For a practical setup guide for using this provider inside a Hermes AI Agent environment, see:
+
+- [Hermes AI Agent Integration Guide](docs/hermes_integration_guide.md)
+- [Hermes Example Setup](docs/hermes_example_setup.md)
+- [Hermes Deployment Checklist](docs/hermes_deployment_checklist.md)
+- [Hermes Live Test Runbook](docs/hermes_live_test_runbook.md)
+- [Migration Guide](docs/migration_guide.md)
+
+## License
+
+MIT

@@ -1,0 +1,17 @@
+name: azure-speech
+version: 1.0.0
+description: Microsoft Azure Speech STT/TTS provider for Hermes Agent
+kind: plugin
+license: MIT
+author: Ralf Rottmann
+requires_env:
+  - name: AZURE_SPEECH_KEY
+    description: Azure Speech API key
+    url: https://portal.azure.com/
+    secret: true
+  - name: AZURE_SPEECH_REGION
+    description: Azure Speech region
+  - name: AZURE_SPEECH_VOICE
+    description: Azure Speech voice
+  - name: AZURE_SPEECH_LANGUAGE
+    description: Azure Speech language
