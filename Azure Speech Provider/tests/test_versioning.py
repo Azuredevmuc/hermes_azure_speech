@@ -3,8 +3,8 @@ from __future__ import annotations
 import importlib
 import pathlib
 import re
-import tomllib
 
+import tomllib
 
 SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
 

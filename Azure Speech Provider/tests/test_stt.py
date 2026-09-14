@@ -106,7 +106,11 @@ def test_transcribe_file_uses_configured_timeout(fake_speech_sdk, tmp_path):
     assert result == "Hallo von Azure"
 
 
-def test_transcribe_file_uses_positional_timeout_for_sdk_future(monkeypatch, fake_speech_sdk, tmp_path):
+def test_transcribe_file_uses_positional_timeout_for_sdk_future(
+    monkeypatch,
+    fake_speech_sdk,
+    tmp_path,
+):
     audio_path = tmp_path / "input.wav"
     audio_path.write_text("fake-audio", encoding="utf-8")
 

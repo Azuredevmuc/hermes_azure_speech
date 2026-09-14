@@ -11,6 +11,7 @@ try:
 except ImportError:  # pragma: no cover - optional dependency at runtime
     speechsdk = None
 
+from .common import wait_for_sdk_future
 from .config import AzureSpeechConfig
 from .exceptions import (
     AzureSpeechAudioError,
@@ -21,7 +22,6 @@ from .exceptions import (
     AzureSpeechTimeoutError,
     AzureSpeechUnsupportedFormatError,
 )
-from .common import wait_for_sdk_future
 from .ssml import build_ssml
 
 if speechsdk is not None:
@@ -61,7 +61,10 @@ class AzureSpeechTTS:
         self.config = config
 
     @staticmethod
-    def _resolve_output_format(output_path: Path, requested: Optional[str]) -> speechsdk.SpeechSynthesisOutputFormat:
+    def _resolve_output_format(
+        output_path: Path,
+        requested: Optional[str],
+    ) -> speechsdk.SpeechSynthesisOutputFormat:
         suffix = (requested or output_path.suffix or ".mp3").strip().lower()
         if suffix and not suffix.startswith("."):
             suffix = f".{suffix}"

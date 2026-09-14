@@ -10,8 +10,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from provider.cli import stt_main
-
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -21,6 +19,8 @@ def parse_args():
 
 
 def main():
+    from provider.cli import stt_main
+
     args = parse_args()
     return stt_main(["--input", args.input, "--output", args.output])
 

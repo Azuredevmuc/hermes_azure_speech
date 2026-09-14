@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import queue
-from pathlib import Path
 import tempfile
 import threading
+from pathlib import Path
 from typing import Iterable
 
 

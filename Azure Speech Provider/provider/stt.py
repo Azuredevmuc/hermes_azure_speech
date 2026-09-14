@@ -11,6 +11,7 @@ try:
 except ImportError:  # pragma: no cover - optional dependency at runtime
     speechsdk = None
 
+from .common import wait_for_sdk_future
 from .config import AzureSpeechConfig
 from .exceptions import (
     AzureSpeechAudioError,
@@ -20,7 +21,6 @@ from .exceptions import (
     AzureSpeechRecognitionError,
     AzureSpeechTimeoutError,
 )
-from .common import wait_for_sdk_future
 
 DEFAULT_LANGUAGE = "de-DE"
 
@@ -85,7 +85,9 @@ class AzureSpeechSTT:
         except OSError as exc:
             raise AzureSpeechAudioError(f"Audio input failed: {exc}") from exc
         except Exception as exc:
-            raise AzureSpeechRecognitionError(f"Unexpected Azure Speech STT failure: {exc}") from exc
+            raise AzureSpeechRecognitionError(
+                f"Unexpected Azure Speech STT failure: {exc}"
+            ) from exc
 
         if result.reason == speechsdk.ResultReason.RecognizedSpeech:
             transcript = (result.text or "").strip()
@@ -93,13 +95,17 @@ class AzureSpeechSTT:
                 return transcript
 
             if opts.treat_empty_as_error:
-                raise AzureSpeechEmptyTranscriptError("Azure Speech returned an empty transcript.")
+                raise AzureSpeechEmptyTranscriptError(
+                    "Azure Speech returned an empty transcript."
+                )
 
             return ""
 
         if result.reason == speechsdk.ResultReason.NoMatch:
             if opts.treat_empty_as_error:
-                raise AzureSpeechEmptyTranscriptError("No speech could be recognized from the audio.")
+                raise AzureSpeechEmptyTranscriptError(
+                    "No speech could be recognized from the audio."
+                )
             return ""
 
         if result.reason == speechsdk.ResultReason.Canceled:

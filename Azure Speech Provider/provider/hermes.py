@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Any
 
 from .config import AzureSpeechConfig
-from .stt import AzureSpeechSTT, AzureSpeechSTTOptions, transcribe_file_to_text
-from .tts import AzureSpeechTTS, AzureSpeechTTSOptions, synthesize_text_to_file
+from .stt import AzureSpeechSTT, AzureSpeechSTTOptions
+from .tts import AzureSpeechTTS, AzureSpeechTTSOptions
 
 
 class HermesSpeechProvider(ABC):

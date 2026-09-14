@@ -162,7 +162,11 @@ def test_synthesize_to_file_uses_configured_timeout(fake_speech_sdk, tmp_path):
     assert output_path.exists()
 
 
-def test_synthesize_to_file_uses_positional_timeout_for_sdk_future(monkeypatch, fake_speech_sdk, tmp_path):
+def test_synthesize_to_file_uses_positional_timeout_for_sdk_future(
+    monkeypatch,
+    fake_speech_sdk,
+    tmp_path,
+):
     config = fake_speech_sdk.AzureSpeechConfig(
         speech_key="key",
         speech_region="westeurope",
@@ -210,7 +214,11 @@ def test_synthesize_to_file_uses_positional_timeout_for_sdk_future(monkeypatch, 
     assert captured["kwargs"] == {}
 
 
-def test_synthesize_to_file_times_out_when_sdk_future_blocks(monkeypatch, fake_speech_sdk, tmp_path):
+def test_synthesize_to_file_times_out_when_sdk_future_blocks(
+    monkeypatch,
+    fake_speech_sdk,
+    tmp_path,
+):
     config = fake_speech_sdk.AzureSpeechConfig(
         speech_key="key",
         speech_region="westeurope",
@@ -262,7 +270,11 @@ def test_synthesize_to_file_rejects_empty_text(fake_speech_sdk):
         engine.synthesize_to_file("   ", Path("ignored.mp3"))
 
 
-def test_synthesize_to_file_removes_partial_output_on_failure(monkeypatch, fake_speech_sdk, tmp_path):
+def test_synthesize_to_file_removes_partial_output_on_failure(
+    monkeypatch,
+    fake_speech_sdk,
+    tmp_path,
+):
     config = fake_speech_sdk.AzureSpeechConfig(
         speech_key="key",
         speech_region="westeurope",
