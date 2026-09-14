@@ -1,3 +1,7 @@
+
+
+![Hermes Azure Speech Provider](docs/img/logo.png)
+
 # Hermes Azure Speech Provider
 
 Reusable Azure Speech STT/TTS provider components for Hermes-based integrations.
