@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-label="Winged speech bubble audio logo">
+  <defs>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#63F7F0"/>
+      <stop offset="0.5" stop-color="#20DDE7"/>
+      <stop offset="1" stop-color="#18BFD8"/>
+    </linearGradient>
+    <linearGradient id="cyan2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#75FFF3"/>
+      <stop offset="1" stop-color="#0FC6DF"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- soft cyan halo -->
+  <g opacity="0.32" filter="url(#glow)" fill="none" stroke="#20E8E5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M370 443 C325 432 285 396 244 363 C196 325 132 287 75 251" stroke-width="54"/>
+    <path d="M353 495 C299 486 244 454 192 420 C151 394 112 360 83 333" stroke-width="42"/>
+    <path d="M337 544 C278 535 231 512 188 487 C157 469 131 449 111 431" stroke-width="34"/>
+    <path d="M830 443 C875 432 915 396 956 363 C1004 325 1068 287 1125 251" stroke-width="54"/>
+    <path d="M847 495 C901 486 956 454 1008 420 C1049 394 1088 360 1117 333" stroke-width="42"/>
+    <path d="M863 544 C922 535 969 512 1012 487 C1043 469 1069 449 1089 431" stroke-width="34"/>
+    <path d="M371 437 C408 376 489 347 600 347 C711 347 792 376 829 437 C856 481 862 544 843 596 C821 657 767 695 697 720 C656 735 611 743 564 744 L445 821 L474 741 C405 725 357 692 331 643 C304 592 305 490 371 437 Z" stroke-width="22"/>
+  </g>
+
+  <!-- wings -->
+  <g fill="url(#cyan2)">
+    <path d="M377 438 C330 430 294 394 250 359 C199 319 132 282 72 248 C81 309 117 353 173 382 C231 411 286 434 347 458 C358 462 370 456 377 438 Z"/>
+    <path d="M358 493 C302 484 248 453 194 419 C150 391 112 360 83 331 C90 379 119 413 164 438 C218 468 278 486 341 511 C350 514 357 507 358 493 Z"/>
+    <path d="M343 542 C286 534 237 512 191 486 C158 467 132 447 111 428 C124 466 151 493 190 511 C233 532 281 546 333 559 C340 561 344 554 343 542 Z"/>
+
+    <path d="M823 438 C870 430 906 394 950 359 C1001 319 1068 282 1128 248 C1119 309 1083 353 1027 382 C969 411 914 434 853 458 C842 462 830 456 823 438 Z"/>
+    <path d="M842 493 C898 484 952 453 1006 419 C1050 391 1088 360 1117 331 C1110 379 1081 413 1036 438 C982 468 922 486 859 511 C850 514 843 507 842 493 Z"/>
+    <path d="M857 542 C914 534 963 512 1009 486 C1042 467 1068 447 1089 428 C1076 466 1049 493 1010 511 C967 532 919 546 867 559 C860 561 856 554 857 542 Z"/>
+  </g>
+
+  <!-- speech bubble outline -->
+  <path d="M371 437 C408 376 489 347 600 347 C711 347 792 376 829 437 C856 481 862 544 843 596 C821 657 767 695 697 720 C656 735 611 743 564 744 L445 821 L474 741 C405 725 357 692 331 643 C304 592 305 490 371 437 Z"
+        fill="#062235" fill-opacity="0.95" stroke="url(#cyan)" stroke-width="32" stroke-linejoin="round"/>
+
+  <!-- waveform -->
+  <g fill="url(#cyan)" filter="url(#glow)">
+    <rect x="455" y="523" width="36" height="80" rx="18"/>
+    <rect x="515" y="481" width="38" height="164" rx="19"/>
+    <rect x="580" y="437" width="40" height="250" rx="20"/>
+    <rect x="647" y="496" width="38" height="136" rx="19"/>
+    <rect x="710" y="535" width="34" height="69" rx="17"/>
+  </g>
+</svg>
