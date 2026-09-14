@@ -1,3 +1,5 @@
+![Hermes Azure Speech Provider](Azure%20Speech%20Provider/docs/img/logo.png)
+
 # Hermes Azure Speech Provider
 
 This repository contains the Azure Speech STT/TTS provider for Hermes-based integrations.
